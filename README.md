@@ -1,6 +1,7 @@
 # go_project
 
-# You can start the project with below commands
+You can start the project with below commands
+```bash
 docker-compose up -d
 go run main.go
 ```
