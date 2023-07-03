@@ -1,5 +1,10 @@
 # go_project
 
+# You can start the project with below commands
+docker-compose up -d
+go run main.go
+```
+
 - **SIGNUP FUNCTION API CALL (POST REQUEST)**
 
   http://localhost:8000/users/signup
