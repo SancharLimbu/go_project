@@ -2,7 +2,7 @@
 
 - **SIGNUP FUNCTION API CALL (POST REQUEST)**
 
-http://localhost:8000/users/signup
+  http://localhost:8000/users/signup
 
 ```json
 {
