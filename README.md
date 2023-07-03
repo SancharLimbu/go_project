@@ -71,65 +71,30 @@ Response
 
 ```json
 [
-  {
-    "Product_ID": "6153ff8edef2c3c0a02ae39a",
-    "product_name": "alienwarex15",
-    "price": 1500,
-    "rating": 10,
-    "image": "alienware.jpg"
-  },
-  {
-    "Product_ID": "616152679f29be942bd9df8f",
-    "product_name": "giner ale",
-    "price": 900,
-    "rating": 5,
-    "image": "gin.jpg"
-  },
-  {
-    "Product_ID": "616152ee9f29be942bd9df90",
-    "product_name": "iphone 13",
-    "price": 1700,
-    "rating": 4,
-    "image": "ipho.jpg"
-  },
-  {
-    "Product_ID": "616152fa9f29be942bd9df91",
-    "product_name": "whiskey",
-    "price": 100,
-    "rating": 7,
-    "image": "whis.jpg"
-  },
-  {
-    "Product_ID": "616153039f29be942bd9df92",
-    "product_name": "acer predator",
-    "price": 3000,
-    "rating": 10,
-    "image": "acer.jpg"
-  }
+    {
+        "Product_ID": "64a2c894b2c979fdae2974f6",
+        "product_name": "Alienware x15",
+        "price": 2500,
+        "rating": 10,
+        "image": "alienware.jpg"
+    }
 ]
 ```
 
-- **Search Product by regex function (GET REQUEST)**
+- **Search Product by (GET REQUEST)**
 
 defines the word search sorting
-http://localhost:8000/users/search?name=al
+http://localhost:8000/users/search?name=x
 
 response:
 
 ```json
 [
-  {
-    "Product_ID": "616152fa9f29be942bd9df91",
-    "product_name": "Alienware x15",
-    "price": 1500,
-    "rating": 10,
-    "image": "1.jpg"
-  },
-  {
-    "Product_ID": "616153039f29be942bd9df92",
-    "product_name": "ginger Ale",
-    "price": 300,
-    "rating": 10,
-    "image": "1.jpg"
-  }
+    {
+        "Product_ID": "64a2c894b2c979fdae2974f6",
+        "product_name": "Alienware x15",
+        "price": 2500,
+        "rating": 10,
+        "image": "alienware.jpg"
+    }
 ]
