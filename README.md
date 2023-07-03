@@ -31,20 +31,20 @@ response will be like this
 
 ```json
 {
-  "_id": "***********************",
-  "first_name": "akhil",
-  "last_name": "sharma",
-  "password": "$2a$14$UIYjkTfnFnhg4qhIfhtYnuK9qsBQifPKgu/WPZAYBaaN17j0eTQZa",
-  "email": "akhil@gmail.com",
-  "phone": "+4534545435",
-  "token": "eyJc0Bwcm90b25vbWFpbC5jb20iLCJGaXJzdF9OYW1lIjoiam9zZXBoIiwiTGFzdF9OYW1lIjoiaGVybWlzIiwiVWlkIjoiNjE2MTRmNTM5ZjI5YmU5NDJiZDlkZjhlIiwiZXhwIjoxNjMzODUzNjUxfQ.NbcpVtPLJJqRF44OLwoanynoejsjdJb5_v2qB41SmB8",
-  "Refresh_Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6IiIsIkZpcnLCJVaWQiOiIiLCJleHAiOjE2MzQzNzIwNTF9.ocpU8-0gCJsejmCeeEiL8DXhFcZsW7Z3OCN34HgIf2c",
-  "created_at": "2022-04-09T08:14:11Z",
-  "updtaed_at": "2022-04-09T08:14:11Z",
-  "user_id": "61614f539f29be942bd9df8e",
-  "usercart": [],
-  "address": [],
-  "orders": []
+    "_id": "64a2c84bb2c979fdae2974f4",
+    "first_name": "Sanchar",
+    "last_name": "Limbu",
+    "password": "$2a$14$SIU4rS4sqmwQ4p71dCjjHuUz4UO50QyiGxjOU.8DFCL1oHH0anayi",
+    "email": "test@gmail.com",
+    "phone": "9863325642",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6InRlc3RAZ21haWwuY29tIiwiRmlyc3RfTmFtZSI6IlNhbmNoYXIiLCJMYXN0X05hbWUiOiJMaW1idSIsIlVpZCI6IjY0YTJjODRiYjJjOTc5ZmRhZTI5NzRmNCIsImV4cCI6MTY4ODQ3NjEwN30.RUWzhoJhMUVqqNn8usWr1C99yj8d9Fn8ZcgRZ_SujGc",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6IiIsIkZpcnN0X05hbWUiOiIiLCJMYXN0X05hbWUiOiIiLCJVaWQiOiIiLCJleHAiOjE2ODg5OTQ1MDd9.NGPO-PYfWztVp3RVS_QW7wUXZCM4ffYrEtF_5EOxH68",
+    "created_at": "2023-07-03T13:08:27Z",
+    "updated_at": "2023-07-03T13:08:27Z",
+    "user_id": "64a2c84bb2c979fdae2974f4",
+    "user_cart": [],
+    "address": [],
+    "orders": []
 }
 ```
 
