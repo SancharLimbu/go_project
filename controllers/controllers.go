@@ -65,7 +65,7 @@ func SignUp() gin.HandlerFunc {
 
 		count, err := UserCollection.CountDocuments(ctx, bson.M{"email": user.Email})
 		if err != nil {
-			// log.Panic(err)
+			log.Panic(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}

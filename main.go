@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"go_project/controllers"
 	"go_project/database"
 	"go_project/middleware"
 	"go_project/routes"
 	"log"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {

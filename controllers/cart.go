@@ -3,15 +3,16 @@ package controllers
 import (
 	"context"
 	"errors"
-	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go_project/database"
 	"go_project/models"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Application struct {
@@ -35,7 +36,7 @@ func (app *Application) AddToCart() gin.HandlerFunc {
 			return
 		}
 
-		userQueryID := c.Query("UserID")
+		userQueryID := c.Query("userID")
 		if userQueryID == "" {
 			log.Println("user id is empty")
 			_ = c.AbortWithError(http.StatusBadRequest, errors.New("user id is empty"))
