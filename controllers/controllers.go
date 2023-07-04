@@ -28,6 +28,7 @@ func HashPassword(password string) string {
 	if err != nil {
 		log.Panic(err)
 	}
+
 	return string(bytes)
 }
 
@@ -39,6 +40,7 @@ func VerifyPassword(userpassword string, givenpassword string) (bool, string) {
 		msg = "Login Or Passowrd is Incorerct"
 		valid = false
 	}
+
 	return valid, msg
 }
 
@@ -80,10 +82,12 @@ func SignUp() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}
+
 		if count > 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Phone is already in use"})
 			return
 		}
+
 		password := HashPassword(*user.Password)
 		user.Password = &password
 
@@ -102,7 +106,9 @@ func SignUp() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "not created"})
 			return
 		}
+
 		defer cancel()
+
 		c.JSON(http.StatusCreated, "Successfully Signed Up!!")
 	}
 }
@@ -113,25 +119,32 @@ func Login() gin.HandlerFunc {
 		defer cancel()
 		var user models.User
 		var founduser models.User
+
 		if err := c.BindJSON(&user); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
+
 		err := UserCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&founduser)
 		defer cancel()
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "login or password incorrect"})
 			return
 		}
+
 		PasswordIsValid, msg := VerifyPassword(*user.Password, *founduser.Password)
 		defer cancel()
+
 		if !PasswordIsValid {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			fmt.Println(msg)
 			return
 		}
+
 		token, refreshToken, _ := generate.TokenGenerator(*founduser.Email, *founduser.First_Name, *founduser.Last_Name, founduser.User_ID)
 		defer cancel()
+
 		generate.UpdateAllTokens(token, refreshToken, founduser.User_ID)
 		c.JSON(http.StatusFound, founduser)
 
@@ -142,18 +155,24 @@ func ProductViewerAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		var products models.Product
+
 		defer cancel()
+
 		if err := c.BindJSON(&products); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+
 		products.Product_ID = primitive.NewObjectID()
+
 		_, anyerr := ProductCollection.InsertOne(ctx, products)
 		if anyerr != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Not Created"})
 			return
 		}
+
 		defer cancel()
+
 		c.JSON(http.StatusOK, "Successfully added our Product Admin!!")
 	}
 }
@@ -163,17 +182,20 @@ func SearchProduct() gin.HandlerFunc {
 		var productlist []models.Product
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+
 		cursor, err := ProductCollection.Find(ctx, bson.D{{}})
 		if err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, "Someting Went Wrong Please Try After Some Time")
 			return
 		}
+
 		err = cursor.All(ctx, &productlist)
 		if err != nil {
 			log.Println(err)
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
+
 		defer cursor.Close(ctx)
 		if err := cursor.Err(); err != nil {
 			// Don't forget to log errors. I log them really simple here just
@@ -182,7 +204,9 @@ func SearchProduct() gin.HandlerFunc {
 			c.IndentedJSON(400, "invalid")
 			return
 		}
+
 		defer cancel()
+
 		c.IndentedJSON(200, productlist)
 
 	}
@@ -199,25 +223,31 @@ func SearchProductByQuery() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
+
 		searchquerydb, err := ProductCollection.Find(ctx, bson.M{"product_name": bson.M{"$regex": queryParam}})
 		if err != nil {
 			c.IndentedJSON(404, "something went wrong in fetching the dbquery")
 			return
 		}
+
 		err = searchquerydb.All(ctx, &searchproducts)
 		if err != nil {
 			log.Println(err)
 			c.IndentedJSON(400, "invalid")
 			return
 		}
+
 		defer searchquerydb.Close(ctx)
+
 		if err := searchquerydb.Err(); err != nil {
 			log.Println(err)
 			c.IndentedJSON(400, "invalid request")
 			return
 		}
+
 		defer cancel()
 		c.IndentedJSON(200, searchproducts)
 	}

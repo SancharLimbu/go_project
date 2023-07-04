@@ -16,8 +16,10 @@ func DBSet() *mongo.Client {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
+
 	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
@@ -28,7 +30,9 @@ func DBSet() *mongo.Client {
 		log.Println("Failed to connect to mongodb")
 		return nil
 	}
+
 	fmt.Println("Successfully Connected to the mongodb")
+
 	return client
 }
 
