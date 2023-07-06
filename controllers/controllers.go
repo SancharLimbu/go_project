@@ -198,8 +198,6 @@ func SearchProduct() gin.HandlerFunc {
 
 		defer cursor.Close(ctx)
 		if err := cursor.Err(); err != nil {
-			// Don't forget to log errors. I log them really simple here just
-			// to get the point across.
 			log.Println(err)
 			c.IndentedJSON(400, "invalid")
 			return
