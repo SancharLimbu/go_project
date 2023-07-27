@@ -18,7 +18,7 @@ go run main.go
 }
 ```
 
-Response :"Successfully Signed Up!!"
+Response: "Successfully Signed Up!!"
 
 - **LOGIN FUNCTION API CALL (POST REQUEST)**
 
