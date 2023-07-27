@@ -29,6 +29,7 @@ type Product struct {
 	Price        *uint64            `json:"price"`
 	Rating       *uint8             `json:"rating"`
 	Image        *string            `json:"image"`
+	Category     []string           `json:"category"`
 }
 
 type ProductUser struct {
