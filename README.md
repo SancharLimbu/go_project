@@ -6,7 +6,7 @@ go run main.go
 
 - **SIGNUP FUNCTION API CALL (POST REQUEST)**
 
-http://localhost:8000/users/signup
+<http://localhost:8000/users/signup>
 
 ```json
 {
@@ -22,7 +22,7 @@ Response :"Successfully Signed Up!!"
 
 - **LOGIN FUNCTION API CALL (POST REQUEST)**
 
-  http://localhost:8000/users/login
+  <http://localhost:8000/users/login>
 
 ```json
 {
@@ -54,7 +54,7 @@ Response:
 
 - **Admin add Product Function (POST REQUEST)**
 
-  http://localhost:8000/admin/addproduct
+  <http://localhost:8000/admin/addproduct>
 
 ```json
 {
@@ -70,7 +70,7 @@ Response : "Successfully added our Product Admin!!"
 
 - **View all the Products in db GET REQUEST**
 
-  http://localhost:8000/users/productview
+  <http://localhost:8000/users/productview>
 
 Response
 
@@ -102,7 +102,7 @@ Response
 
 - **Search Product by regex function (GET REQUEST)**
 
-http://localhost:8000/users/search?name=Al
+<http://localhost:8000/users/search?name=Al>
 
 Response:
 
@@ -134,7 +134,7 @@ Response:
 
 - **Search Product by Category (GET REQUEST)**
 
-  http://localhost:8000/users/search-category?name=Gaming
+  <http://localhost:8000/users/search-category?name=Gaming>
 
 Response:
 
@@ -156,15 +156,15 @@ Response:
 
 - **Adding the Products to the Cart (GET REQUEST)**
 
-  http://localhost:8000/addtocart?id=64a3b75a227c961f850ef099&userID=64a3b752227c961f850ef098
+  <http://localhost:8000/addtocart?id=64a3b75a227c961f850ef099&userID=64a3b752227c961f850ef098>
 
 Response: "Successfully Added to the cart"
 
 - **List the Products in the Cart (GET REQUEST)**
 
-  http://localhost:8000/listcart?id=64c283e8593e19b180b38f20
+  <http://localhost:8000/listcart?id=64c283e8593e19b180b38f20>
 
-Response: 
+Response:
 
 ```json
 2500[
@@ -180,13 +180,13 @@ Response:
 
 - **Removing Item From the Cart (GET REQUEST)**
 
-  http://localhost:8000/removeitem?id=64c215ae975cd1706d1492c5&userID=64c283e8593e19b180b38f20
+  <http://localhost:8000/removeitem?id=64c215ae975cd1706d1492c5&userID=64c283e8593e19b180b38f20>
 
 Response: "Successfully removed from cart"
 
 - **Addding the Address (POST REQUEST)**
 
-  http://localhost:8000/addaddress?id=64c283e8593e19b180b38f20
+  <http://localhost:8000/addaddress?id=64c283e8593e19b180b38f20>
 
   The Address array is limited to a single value more addresses is not acceptable
 
@@ -203,7 +203,7 @@ Response: "Successfully Added the Address"
 
 - **Editing the Address(PUT REQUEST)**
 
-  http://localhost:8000/edithomeaddress?id=64c283e8593e19b180b38f20
+  <http://localhost:8000/edithomeaddress?id=64c283e8593e19b180b38f20>
 
 ```json
 {
@@ -218,17 +218,17 @@ Response: "Successfully Updated the address"
 
 - **Delete Addresses(GET REQUEST)**
 
-  http://localhost:8000/deleteaddresses?id=64c283e8593e19b180b38f20
+  <http://localhost:8000/deleteaddresses?id=64c283e8593e19b180b38f20>
 
 Response: "Successfully Deleted!"
 
 - **Cart Checkout Function and placing the order(GET REQUEST)**
 
-  http://localhost:8000/cartcheckout?id=64c283e8593e19b180b38f20
+  <http://localhost:8000/cartcheckout?id=64c283e8593e19b180b38f20>
 
 Response: "Successfully Placed the order"
 
 - **Instantly Buying the Products(GET REQUEST)**
-  http://localhost:8000/instantbuy?userid=64c283e8593e19b180b38f20&pid=64c215ae975cd1706d1492c5
+  <http://localhost:8000/instantbuy?userid=64c283e8593e19b180b38f20&pid=64c215ae975cd1706d1492c5>
 
 Response: "Successully placed the order"
