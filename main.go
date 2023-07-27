@@ -29,7 +29,6 @@ func main() {
 	router.GET("/listcart", controllers.GetItemFromCart())
 	router.POST("/addaddress", controllers.AddAddress())
 	router.PUT("/edithomeaddress", controllers.EditHomeAddress())
-	router.PUT("/editworkaddress", controllers.EditWorkAddress())
 	router.GET("/deleteaddresses", controllers.DeleteAddress())
 	router.GET("/cartcheckout", app.BuyFromCart())
 	router.GET("/instantbuy", app.InstantBuy())
