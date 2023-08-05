@@ -25,11 +25,12 @@ func main() {
 	router := gin.New()
 
 	router.Use(cors.Middleware(cors.Config{
-		Origins:         "*",
-		Methods:         "GET, PUT, POST, DELETE",
-		RequestHeaders:  "Origin, Authorization, Content-Type, Token",
-		ExposedHeaders:  "",
-		MaxAge:          50 * time.Second,
+		Origins:        "*",
+		Methods:        "GET, PUT, POST, DELETE",
+		RequestHeaders: "Origin, Authorization, Content-Type, Token",
+		ExposedHeaders: "",
+		MaxAge:         50 * time.Second,
+		//Dont use Origins: "*" when using Credentials: true
 		Credentials:     true,
 		ValidateHeaders: false,
 	}))
