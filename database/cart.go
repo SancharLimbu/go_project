@@ -71,7 +71,6 @@ func RemoveCartItem(ctx context.Context, prodCollection, userCollection *mongo.C
 	}
 
 	return nil
-
 }
 
 func BuyItemFromCart(ctx context.Context, userCollection *mongo.Collection, userID string) error {

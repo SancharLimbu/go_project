@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -176,6 +177,36 @@ func ProductViewerAdmin() gin.HandlerFunc {
 		defer cancel()
 
 		c.JSON(http.StatusOK, "Successfully added our Product Admin!!")
+	}
+}
+
+func DeleteProductAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		productQueryID := c.Query("id")
+		if productQueryID == "" {
+			log.Println("product id is inavalid")
+			_ = c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
+			return
+		}
+
+		ProductID, err := primitive.ObjectIDFromHex(productQueryID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid Product ID"})
+			return
+		}
+
+		var ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		_, err = ProductCollection.DeleteOne(ctx, bson.M{"_id": ProductID})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+			return
+		}
+
+		defer cancel()
+
+		c.JSON(http.StatusOK, "Successfully Deleted the Product")
 	}
 }
 
