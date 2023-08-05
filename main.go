@@ -30,7 +30,7 @@ func main() {
 		RequestHeaders: "Origin, Authorization, Content-Type, Token",
 		ExposedHeaders: "",
 		MaxAge:         50 * time.Second,
-		//Dont use Origins: "*" when using Credentials: true
+		// Dont use Origins: "*" when using Credentials: true
 		Credentials:     true,
 		ValidateHeaders: false,
 	}))
