@@ -60,12 +60,6 @@ func SignUp() gin.HandlerFunc {
 			return
 		}
 
-		validationErr := Validate.Struct(user)
-		if validationErr != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr})
-			return
-		}
-
 		count, err := UserCollection.CountDocuments(ctx, bson.M{"email": user.Email})
 		if err != nil {
 			log.Panic(err)
@@ -75,6 +69,7 @@ func SignUp() gin.HandlerFunc {
 
 		if count > 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "User already exists"})
+			return
 		}
 
 		count, err = UserCollection.CountDocuments(ctx, bson.M{"phone": user.Phone})
