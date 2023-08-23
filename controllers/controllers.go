@@ -4,8 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"go-api/database"
@@ -154,21 +157,66 @@ func Login() gin.HandlerFunc {
 	}
 }
 
-func ProductViewerAdmin() gin.HandlerFunc {
+func AddProductAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-		var products models.Product
-
 		defer cancel()
 
-		if err := c.BindJSON(&products); err != nil {
+		var product models.Product
+
+		if err := c.ShouldBind(&product); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		products.Product_ID = primitive.NewObjectID()
+		product.Product_ID = primitive.NewObjectID()
 
-		_, anyerr := ProductCollection.InsertOne(ctx, products)
+		productName := c.PostForm("product_name")
+
+		priceStr := c.PostForm("price")
+		price, err := strconv.ParseUint(priceStr, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid price value"})
+			return
+		}
+
+		ratingStr := c.PostForm("rating")
+		rating, err := strconv.ParseUint(ratingStr, 10, 8)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid rating value"})
+			return
+		}
+		ratingUint8 := uint8(rating)
+
+		image, imageHeader, err := c.Request.FormFile("image")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Image upload error"})
+			return
+		}
+
+		categories := c.PostFormArray("category")
+
+		imagePath := "assets/" + imageHeader.Filename
+		imageFile, err := os.Create(imagePath)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Image save error"})
+			return
+		}
+		defer imageFile.Close()
+
+		_, err = io.Copy(imageFile, image)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Image save error"})
+			return
+		}
+
+		product.Image = &imagePath
+		product.Price = &price
+		product.Rating = &ratingUint8
+		product.Category = categories
+		product.Product_Name = &productName
+
+		_, anyerr := ProductCollection.InsertOne(ctx, product)
 		if anyerr != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Not Created"})
 			return

@@ -11,7 +11,7 @@ import (
 	"go-api/routes"
 
 	"github.com/gin-gonic/gin"
-	"github.com/itsjamie/gin-cors"
+	cors "github.com/itsjamie/gin-cors"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 		ExposedHeaders: "",
 		MaxAge:         50 * time.Second,
 		// Dont use Origins: "*" when using Credentials: true
-		Credentials:     true,
+		Credentials:     false,
 		ValidateHeaders: false,
 	}))
 
