@@ -41,7 +41,7 @@ func VerifyPassword(userpassword string, givenpassword string) (bool, string) {
 	valid := true
 	msg := ""
 	if err != nil {
-		msg = "Login Or Passowrd is Incorerct"
+		msg = "Password Incorrect"
 		valid = false
 	}
 
@@ -130,7 +130,7 @@ func Login() gin.HandlerFunc {
 		defer cancel()
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "login or password incorrect"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Login Incorrect"})
 			return
 		}
 
