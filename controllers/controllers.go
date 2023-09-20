@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"regexp"
 	"strconv"
 	"time"
 
@@ -16,7 +15,6 @@ import (
 	"go-api/models"
 	generate "go-api/tokens"
 
-	emailverifier "github.com/AfterShip/email-verifier"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -48,30 +46,6 @@ func VerifyPassword(userpassword string, givenpassword string) (bool, string) {
 	return valid, msg
 }
 
-func ValidatePassword(userpassword string) error {
-	pattern := `^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$`
-
-	regex := regexp.MustCompile(pattern)
-
-	if !regex.MatchString(userpassword) {
-		return fmt.Errorf("Password must contain atleast 1 uppercase, 1 lowercase and 1 digit")
-	}
-
-	return nil
-}
-
-func ValidateEmail(useremail string) error {
-	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-
-	regex := regexp.MustCompile(pattern)
-
-	if !regex.MatchString(useremail) {
-		return fmt.Errorf("Email Format is Invalid")
-	}
-
-	return nil
-}
-
 func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -84,29 +58,8 @@ func SignUp() gin.HandlerFunc {
 			return
 		}
 
-		// Validate password input
-		if err := ValidatePassword(*user.Password); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		// Validate email input
-		if err := ValidateEmail(*user.Email); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		// Verify email address using email-verifier
-		verifier := emailverifier.NewVerifier().EnableSMTPCheck()
-
-		emailVerification, err := verifier.Verify(*user.Email)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Email verification failed"})
-			return
-		}
-		// Check if email is disposable or valid
-		if emailVerification.Disposable || emailVerification.Syntax.Valid {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email address or SMTP verification failed"})
+		if *user.Email == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Email is required"})
 			return
 		}
 
