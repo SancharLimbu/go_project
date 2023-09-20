@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -16,7 +17,6 @@ import (
 	generate "go-api/tokens"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,7 +25,6 @@ import (
 
 var UserCollection *mongo.Collection = database.UserData(database.Client, "Users")
 var ProductCollection *mongo.Collection = database.ProductData(database.Client, "Products")
-var Validate = validator.New()
 
 func HashPassword(password string) string {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
@@ -48,6 +47,30 @@ func VerifyPassword(userpassword string, givenpassword string) (bool, string) {
 	return valid, msg
 }
 
+func ValidatePassword(userpassword string) error {
+	pattern := `^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$`
+
+	regex := regexp.MustCompile(pattern)
+
+	if !regex.MatchString(userpassword) {
+		return fmt.Errorf("Password must contain atleast 1 uppercase, 1 lowercase and 1 digit")
+	}
+
+	return nil
+}
+
+func ValidateEmail(useremail string) error {
+	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+
+	regex := regexp.MustCompile(pattern)
+
+	if !regex.MatchString(useremail) {
+		return fmt.Errorf("Email Format is Invalid")
+	}
+
+	return nil
+}
+
 func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -60,9 +83,20 @@ func SignUp() gin.HandlerFunc {
 			return
 		}
 
+		// Validate password input
+		if err := ValidatePassword(*user.Password); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Validate email input
+		if err := ValidateEmail(*user.Email); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
 		count, err := UserCollection.CountDocuments(ctx, bson.M{"email": user.Email})
 		if err != nil {
-			log.Panic(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}
@@ -77,7 +111,6 @@ func SignUp() gin.HandlerFunc {
 		defer cancel()
 
 		if err != nil {
-			log.Panic(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}
@@ -87,8 +120,8 @@ func SignUp() gin.HandlerFunc {
 			return
 		}
 
-		password := HashPassword(*user.Password)
-		user.Password = &password
+		passwordHash := HashPassword(*user.Password)
+		user.Password = &passwordHash
 
 		user.Created_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		user.Updated_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
@@ -250,6 +283,52 @@ func DeleteProductAdmin() gin.HandlerFunc {
 		defer cancel()
 
 		c.JSON(http.StatusOK, "Successfully Deleted the Product")
+	}
+}
+
+func EditProductAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		productQueryId := c.Query("id")
+
+		if productQueryId == "" {
+			c.Header("Content-Type", "application/json")
+			c.JSON(http.StatusNotFound, gin.H{"Error": "Invalid"})
+			c.Abort()
+			return
+		}
+
+		productId, err := primitive.ObjectIDFromHex(productQueryId)
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Invalid Product ID"})
+			return
+		}
+
+		var ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		var updatedProduct models.Product
+
+		if err := c.ShouldBindJSON(&updatedProduct); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+			return
+		}
+
+		update := bson.M{
+			"$set": bson.M{
+				"product_name": updatedProduct.Product_Name,
+				"price":        updatedProduct.Price,
+				"rating":       updatedProduct.Rating,
+				"category":     updatedProduct.Category,
+			},
+		}
+
+		_, err = ProductCollection.UpdateOne(ctx, bson.M{"_id": productId}, update)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": "Failed to Update Product"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"Message": "Product updates successfully"})
 	}
 }
 
