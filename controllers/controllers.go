@@ -16,6 +16,7 @@ import (
 	"go-api/models"
 	generate "go-api/tokens"
 
+	emailverifier "github.com/AfterShip/email-verifier"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -92,6 +93,20 @@ func SignUp() gin.HandlerFunc {
 		// Validate email input
 		if err := ValidateEmail(*user.Email); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Verify email address using email-verifier
+		verifier := emailverifier.NewVerifier().EnableSMTPCheck()
+
+		emailVerification, err := verifier.Verify(*user.Email)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Email verification failed"})
+			return
+		}
+		// Check if email is disposable or valid
+		if emailVerification.Disposable || emailVerification.Syntax.Valid {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email address or SMTP verification failed"})
 			return
 		}
 
