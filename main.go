@@ -15,11 +15,6 @@ import (
 )
 
 func main() {
-	// TODO:
-	// - [x] 1. Add EditProductAdmin
-	// 2. Add OTP with https://github.com/AfterShip/email-verifier.git
-	// 3. Add Admin authentication
-	// - [x] 4. Add password and email regex
 
 	port := os.Getenv("PORT")
 	if port == "" {
