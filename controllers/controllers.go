@@ -228,7 +228,7 @@ func DeleteProductAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		productQueryID := c.Query("id")
 		if productQueryID == "" {
-			log.Println("product id is inavalid")
+			log.Println("product id is invalid")
 			_ = c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
 			return
 		}
@@ -308,7 +308,7 @@ func SearchProduct() gin.HandlerFunc {
 
 		cursor, err := ProductCollection.Find(ctx, bson.D{{}})
 		if err != nil {
-			c.IndentedJSON(http.StatusInternalServerError, "Someting Went Wrong Please Try After Some Time")
+			c.IndentedJSON(http.StatusInternalServerError, "Something Went Wrong Please Try After Some Time")
 			return
 		}
 

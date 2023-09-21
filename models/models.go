@@ -16,7 +16,7 @@ type User struct {
 	Token           *string            `json:"token"`
 	Refresh_Token   *string            `json:"refresh_token"`
 	Created_At      time.Time          `json:"created_at"`
-	Updated_At      time.Time          `json:"updtaed_at"`
+	Updated_At      time.Time          `json:"updated_at"`
 	User_ID         string             `json:"user_id"`
 	UserCart        []ProductUser      `json:"usercart" bson:"usercart"`
 	Address_Details []Address          `json:"address" bson:"address"`
@@ -51,7 +51,7 @@ type Address struct {
 type Order struct {
 	Order_ID       primitive.ObjectID `bson:"_id"`
 	Order_Cart     []ProductUser      `json:"order_list"  bson:"order_list"`
-	Orderered_At   time.Time          `json:"ordered_on"  bson:"ordered_on"`
+	Ordered_At     time.Time          `json:"ordered_on"  bson:"ordered_on"`
 	Price          int                `json:"total_price" bson:"total_price"`
 	Discount       *int               `json:"discount"    bson:"discount"`
 	Payment_Method Payment            `json:"payment_method" bson:"payment_method"`

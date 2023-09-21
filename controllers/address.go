@@ -143,7 +143,7 @@ func DeleteAddress() gin.HandlerFunc {
 
 		_, err = UserCollection.UpdateOne(ctx, filter, update)
 		if err != nil {
-			c.IndentedJSON(404, "Wromg")
+			c.IndentedJSON(404, "Wrong")
 			return
 		}
 
