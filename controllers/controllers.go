@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -22,8 +23,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var UserCollection *mongo.Collection = database.UserData(database.Client, "Users")
-var ProductCollection *mongo.Collection = database.ProductData(database.Client, "Products")
+var (
+	emailRegex                          = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	passwordRegex                       = regexp.MustCompile(`^[a-zA-Z0-9]*[A-Z]+[a-zA-Z0-9]*\d+[a-zA-Z0-9]*$`)
+	UserCollection    *mongo.Collection = database.UserData(database.Client, "Users")
+	ProductCollection *mongo.Collection = database.ProductData(database.Client, "Products")
+)
 
 func HashPassword(password string) string {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
@@ -59,7 +64,20 @@ func SignUp() gin.HandlerFunc {
 		}
 
 		if *user.Email == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Email is required"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Email cannot be empty"})
+			return
+		}
+
+		// Validate email format
+		if !emailRegex.MatchString(*user.Email) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+			return
+		}
+
+		// Validate password format (at least 8 characters, 1 capital letter, and 1 number)
+		if !passwordRegex.MatchString(*user.Password) {
+			c.JSON(http.StatusBadRequest,
+				gin.H{"error": "Password must be at least 8 characters long and contain at least 1 capital letter and 1 number"})
 			return
 		}
 
