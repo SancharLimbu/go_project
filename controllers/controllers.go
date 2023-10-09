@@ -163,11 +163,19 @@ func Login() gin.HandlerFunc {
 		}
 
 		token, refreshToken, _ := generate.TokenGenerator(*founduser.Email, *founduser.First_Name, *founduser.Last_Name, founduser.User_ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Token Generation Failed"})
+			return
+		}
+
 		defer cancel()
 
 		generate.UpdateAllTokens(token, refreshToken, founduser.User_ID)
-		c.JSON(http.StatusFound, founduser)
-
+		c.JSON(http.StatusFound, gin.H{
+			"token":        token,
+			"refreshToken": refreshToken,
+			"user":         founduser,
+		})
 	}
 }
 
