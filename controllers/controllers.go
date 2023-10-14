@@ -122,7 +122,7 @@ func SignUp() gin.HandlerFunc {
 
 		_, inserterr := UserCollection.InsertOne(ctx, user)
 		if inserterr != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "not created"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Profile not created"})
 			return
 		}
 
@@ -149,7 +149,7 @@ func Login() gin.HandlerFunc {
 		defer cancel()
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Login Incorrect"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Email Incorrect"})
 			return
 		}
 
@@ -157,7 +157,7 @@ func Login() gin.HandlerFunc {
 		defer cancel()
 
 		if !PasswordIsValid {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Password Incorrect"})
 			fmt.Println(msg)
 			return
 		}
