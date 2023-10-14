@@ -63,25 +63,61 @@ func (app *Application) AddToCart() gin.HandlerFunc {
 	}
 }
 
+// func (app *Application) RemoveItem() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		productQueryID := c.Query("id")
+// 		if productQueryID == "" {
+// 			log.Println("product id is invalid")
+// 			_ = c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
+// 			return
+// 		}
+
+// 		userQueryID := c.Query("userID")
+// 		if userQueryID == "" {
+// 			log.Println("user id is empty")
+// 			_ = c.AbortWithError(http.StatusBadRequest, errors.New("UserID is empty"))
+// 		}
+
+// 		ProductID, err := primitive.ObjectIDFromHex(productQueryID)
+// 		if err != nil {
+// 			log.Println(err)
+// 			c.AbortWithStatus(http.StatusInternalServerError)
+// 			return
+// 		}
+
+// 		var ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+// 		defer cancel()
+
+// 		err = database.RemoveCartItem(ctx, app.prodCollection, app.userCollection, ProductID, userQueryID)
+// 		if err != nil {
+// 			c.IndentedJSON(http.StatusTeapot, err)
+// 			return
+// 		}
+
+// 		c.IndentedJSON(200, "Successfully removed from cart")
+// 	}
+// }
+
 func (app *Application) RemoveItem() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		productQueryID := c.Query("id")
 		if productQueryID == "" {
-			log.Println("product id is inavalid")
-			_ = c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
+			log.Println("product id is invalid")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Product id is empty"})
 			return
 		}
 
 		userQueryID := c.Query("userID")
 		if userQueryID == "" {
 			log.Println("user id is empty")
-			_ = c.AbortWithError(http.StatusBadRequest, errors.New("UserID is empty"))
+			c.JSON(http.StatusBadRequest, gin.H{"error": "UserID is empty"})
+			return
 		}
 
 		ProductID, err := primitive.ObjectIDFromHex(productQueryID)
 		if err != nil {
 			log.Println(err)
-			c.AbortWithStatus(http.StatusInternalServerError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 			return
 		}
 
@@ -90,11 +126,11 @@ func (app *Application) RemoveItem() gin.HandlerFunc {
 
 		err = database.RemoveCartItem(ctx, app.prodCollection, app.userCollection, ProductID, userQueryID)
 		if err != nil {
-			c.IndentedJSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusTeapot, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.IndentedJSON(200, "Successfully removed from cart")
+		c.JSON(200, gin.H{"message": "Successfully removed from cart"})
 	}
 }
 
@@ -102,22 +138,29 @@ func GetItemFromCart() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user_id := c.Query("id")
 		if user_id == "" {
-			c.Header("Content-Type", "application/json")
 			c.JSON(http.StatusNotFound, gin.H{"error": "invalid id"})
-			c.Abort()
 			return
 		}
 
-		usert_id, _ := primitive.ObjectIDFromHex(user_id)
+		usert_id, err := primitive.ObjectIDFromHex(user_id)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID format"})
+			return
+		}
 
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
 		var filledcart models.User
-		err := UserCollection.FindOne(ctx, bson.D{primitive.E{Key: "_id", Value: usert_id}}).Decode(&filledcart)
+		err = UserCollection.FindOne(ctx, bson.D{primitive.E{Key: "_id", Value: usert_id}}).Decode(&filledcart)
 		if err != nil {
 			log.Println(err)
-			c.IndentedJSON(500, "not id found")
+			c.JSON(500, gin.H{"error": "user not found"})
+			return
+		}
+
+		if len(filledcart.UserCart) == 0 {
+			c.JSON(200, gin.H{"message": "Cart is empty"})
 			return
 		}
 
@@ -128,21 +171,37 @@ func GetItemFromCart() gin.HandlerFunc {
 		pointcursor, err := UserCollection.Aggregate(ctx, mongo.Pipeline{filter_match, unwind, grouping})
 		if err != nil {
 			log.Println(err)
+			c.JSON(500, gin.H{"error": "aggregation error"})
+			return
 		}
 
 		var listing []bson.M
 
 		if err = pointcursor.All(ctx, &listing); err != nil {
 			log.Println(err)
-			c.AbortWithStatus(http.StatusInternalServerError)
+			c.JSON(500, gin.H{"error": "result processing error"})
+			return
 		}
 
-		for _, json := range listing {
-			c.IndentedJSON(200, json["total"])
-			c.IndentedJSON(200, filledcart.UserCart)
+		total := 0
+		cartItems := []gin.H{}
+		for _, item := range filledcart.UserCart {
+			total += item.Price
+			cartItems = append(cartItems, gin.H{
+				"Product_ID":   item.Product_ID,
+				"product_name": item.Product_Name,
+				"price":        item.Price,
+				"rating":       item.Rating,
+				"image":        item.Image,
+			})
 		}
 
-		ctx.Done()
+		response := gin.H{
+			"total":     total,
+			"cartItems": cartItems,
+		}
+
+		c.JSON(200, response)
 	}
 }
 
