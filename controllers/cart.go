@@ -59,7 +59,7 @@ func (app *Application) AddToCart() gin.HandlerFunc {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 		}
 
-		c.IndentedJSON(200, "Successfully Added to the cart")
+		c.IndentedJSON(http.StatusOK, "Successfully Added to the cart")
 	}
 }
 
