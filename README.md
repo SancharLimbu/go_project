@@ -1,10 +1,85 @@
-```bash
-# You can start the project with below commands
-docker-compose up -d
-go run main.go
-```
+## Introduction
 
-- **SIGNUP FUNCTION API CALL (POST REQUEST)**
+This project aims to develop a robust and scalable API for an e-commerce website using the Go programming language, MongoDB as the database, Docker for containerization, and the Gin web framework to streamline the development process.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+  - [Signup](#signup)
+  - [Login](#login)
+  - [Admin Add Product](#admin-add-product)
+  - [View All Products](#view-all-products)
+  - [Search Products](#search-products)
+  - [Search Products by Category](#search-products-by-category)
+  - [Add to Cart](#add-to-cart)
+  - [List Cart](#list-cart)
+  - [Remove Item from Cart](#remove-item-from-cart)
+  - [Add Address](#add-address)
+  - [Edit Address](#edit-address)
+  - [Delete Address](#delete-address)
+  - [Cart Checkout](#cart-checkout)
+  - [Instantly Buy Products](#instantly-buy-products)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+
+
+## Key Features:
+
+1. Go Programming Language:
+   - Leveraging the power and efficiency of Go for high-performance and concurrent API development.
+   - Utilizing Go's statically typed nature and extensive standard library for efficient coding.
+3. MongoDB Integration:
+   - Implementing MongoDB as the database to store and manage product information, user data, and other relevant e-commerce details.
+   - Leveraging MongoDB's flexible schema to accommodate evolving business requirements.
+5. Docker Containerization:
+   - Utilizing Docker for containerization to ensure consistency in development, testing, and deployment environments.
+   - Employing Docker Compose for orchestrating the MongoDB container and the Go application, simplifying the setup process.
+7. Gin Web Framework:
+   - Using the Gin web framework to streamline the development of the API with its fast performance and minimalistic design.
+   - Taking advantage of Gin's middleware support for implementing features like authentication, logging, and error handling.
+9. RESTful API Design:
+    - Designing a RESTful API that adheres to best practices for e-commerce, including endpoints for product listing, user authentication, shopping cart management, and order processing.
+    - Implementing CRUD operations to manage products, users, and orders efficiently.
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed on your machine:
+
+- [Go](https://go.dev/)
+- [Docker](https://www.docker.com/)
+- [MongoDB](https://www.mongodb.com/)
+
+### Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/your-username/your-repo.git
+    ```
+
+2. Navigate into the project directory**
+
+   ```bash
+   cd gp_project
+   ```
+
+
+3. You can start the project with below commands
+
+    ```bash
+    docker-compose up -d
+    go run main.go
+    ```
+
+### Usage
+
+- #### SIGNUP
 
 <http://localhost:8000/users/signup>
 
@@ -20,7 +95,7 @@ go run main.go
 
 Response: "Successfully Signed Up!!"
 
-- **LOGIN FUNCTION API CALL (POST REQUEST)**
+- #### LOGIN
 
   <http://localhost:8000/users/login>
 
@@ -52,7 +127,7 @@ Response:
 }
 ```
 
-- **Admin add Product Function (POST REQUEST)**
+- #### Admin add Product
 
   <http://localhost:8000/admin/addproduct>
 
@@ -68,7 +143,7 @@ Response:
 
 Response : "Successfully added our Product Admin!!"
 
-- **View all the Products in db GET REQUEST**
+- #### View all Products
 
   <http://localhost:8000/users/productview>
 
@@ -100,7 +175,7 @@ Response
 ]
 ```
 
-- **Search Product by regex function (GET REQUEST)**
+- #### Search Products
 
 <http://localhost:8000/users/search?name=Al>
 
@@ -132,7 +207,7 @@ Response:
 ]
 ```
 
-- **Search Product by Category (GET REQUEST)**
+- #### Search Products by Category
 
   <http://localhost:8000/users/search-category?name=Gaming>
 
@@ -154,13 +229,13 @@ Response:
 ]
 ```
 
-- **Adding the Products to the Cart (GET REQUEST)**
+- #### Add to Cart
 
   <http://localhost:8000/addtocart?id=64a3b75a227c961f850ef099&userID=64a3b752227c961f850ef098>
 
 Response: "Successfully Added to the cart"
 
-- **List the Products in the Cart (GET REQUEST)**
+- #### List Cart
 
   <http://localhost:8000/listcart?id=64c283e8593e19b180b38f20>
 
@@ -178,13 +253,13 @@ Response:
 ]
 ```
 
-- **Removing Item From the Cart (GET REQUEST)**
+- #### Remove Item from Cart
 
   <http://localhost:8000/removeitem?id=64c215ae975cd1706d1492c5&userID=64c283e8593e19b180b38f20>
 
 Response: "Successfully removed from cart"
 
-- **Addding the Address (POST REQUEST)**
+- #### Add Address
 
   <http://localhost:8000/addaddress?id=64c283e8593e19b180b38f20>
 
@@ -201,7 +276,7 @@ Response: "Successfully removed from cart"
 
 Response: "Successfully Added the Address"
 
-- **Editing the Address(PUT REQUEST)**
+- #### Edit Address
 
   <http://localhost:8000/edithomeaddress?id=64c283e8593e19b180b38f20>
 
@@ -216,19 +291,29 @@ Response: "Successfully Added the Address"
 
 Response: "Successfully Updated the address"
 
-- **Delete Addresses(GET REQUEST)**
+- #### Delete Address
 
   <http://localhost:8000/deleteaddresses?id=64c283e8593e19b180b38f20>
 
 Response: "Successfully Deleted!"
 
-- **Cart Checkout Function and placing the order(GET REQUEST)**
+- #### Cart Checkout
 
   <http://localhost:8000/cartcheckout?id=64c283e8593e19b180b38f20>
 
 Response: "Successfully Placed the order"
 
-- **Instantly Buying the Products(GET REQUEST)**
+- #### Instantly Buy Products
   <http://localhost:8000/instantbuy?userid=64c283e8593e19b180b38f20&pid=64c215ae975cd1706d1492c5>
 
 Response: "Successully placed the order"
+
+
+### Contributing
+
+You are free to use to this project as you desire.
+
+
+### Acknowledgments
+
+Special Thanks to [Prajwal Khatiwada](https://github.com/Prajwal-khatiwada) for frontend implementation.
